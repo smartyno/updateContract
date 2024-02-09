@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@taquito/beacon-wallet": "^17.0.0",
+    "@taquito/beacon-wallet": "^17.5.2",
     "@taquito/taquito": "^17.5.2",
     "buffer": "^6.0.3",
     "events": "^3.3.0",

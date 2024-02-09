@@ -17,7 +17,7 @@ enum BeaconConnection {
 
 const App = () => {
   const [Tezos, setTezos] = useState<TezosToolkit>(
-    new TezosToolkit("https://mainnet.ecadinfra.com")
+    new TezosToolkit("https://maintnet.ecadinfra.com")
   );
   const [contract, setContract] = useState<any>(undefined);
   const [publicToken, setPublicToken] = useState<string | null>(null);
@@ -29,7 +29,7 @@ const App = () => {
   const [beaconConnection, setBeaconConnection] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("transfer");
 
-  // Ghostnet Increment/Decrement contract
+  //Increment/Decrement contract
   const contractAddress: string = "KT1RcAzAx8BfeYE7dX7jFEvmHKbTcYMkCUgc";
 
   const generateQrCode = (): { __html: string } => {
@@ -64,7 +64,7 @@ const App = () => {
               
                 </h3>
                 <UpdateContract
-                  contract={contract}
+                
                   setUserBalance={setUserBalance}
                   Tezos={Tezos}
                   userAddress={userAddress}

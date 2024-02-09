@@ -10,7 +10,7 @@ interface UpdateContractProps {
 
 const contractAddress = "KT1RcAzAx8BfeYE7dX7jFEvmHKbTcYMkCUgc"; // Hardcoded contract address
 
-const UpdateContract = ({ setUserBalance, Tezos, userAddress, setStorage }: UpdateContractProps) => {
+const UpdateContract = ({setUserBalance, Tezos, userAddress, setStorage }: UpdateContractProps) => {
   const [loadingReveal, setLoadingReveal] = useState<boolean>(false);
   const [tokenId, setTokenId] = useState<string>(""); // State to store the token ID
 
