@@ -17,7 +17,7 @@ enum BeaconConnection {
 
 const App = () => {
   const [Tezos, setTezos] = useState<TezosToolkit>(
-    new TezosToolkit("https://ghostnet.ecadinfra.com")
+    new TezosToolkit("https://mainnet.ecadinfra.com")
   );
   const [contract, setContract] = useState<any>(undefined);
   const [publicToken, setPublicToken] = useState<string | null>(null);
@@ -30,7 +30,7 @@ const App = () => {
   const [activeTab, setActiveTab] = useState<string>("transfer");
 
   // Ghostnet Increment/Decrement contract
-  const contractAddress: string = "KT1QMGSLynvwwSfGbaiJ8gzWHibTCweCGcu8";
+  const contractAddress: string = "KT1RcAzAx8BfeYE7dX7jFEvmHKbTcYMkCUgc";
 
   const generateQrCode = (): { __html: string } => {
     const qr = qrcode(0, "L");
@@ -40,90 +40,28 @@ const App = () => {
     return { __html: qr.createImgTag(4) };
   };
 
-  if (publicToken && (!userAddress || isNaN(userBalance))) {
+  if  (userAddress && !isNaN(userBalance)) {
     return (
       <div className="main-box">
-        <h1>Taquito React template</h1>
-        <div id="dialog">
-          <header>Try the Taquito React template!</header>
-          <div id="content">
-            <p className="text-align-center">
-              <i className="fas fa-broadcast-tower"></i>&nbsp; Connecting to
-              your wallet
-            </p>
-            <div
-              dangerouslySetInnerHTML={generateQrCode()}
-              className="text-align-center"
-            ></div>
-            <p id="public-token">
-              {copiedPublicToken ? (
-                <span id="public-token-copy__copied">
-                  <i className="far fa-thumbs-up"></i>
-                </span>
-              ) : (
-                <span
-                  id="public-token-copy"
-                  onClick={() => {
-                    if (publicToken) {
-                      navigator.clipboard.writeText(publicToken);
-                      setCopiedPublicToken(true);
-                      setTimeout(() => setCopiedPublicToken(false), 2000);
-                    }
-                  }}
-                >
-                  <i className="far fa-copy"></i>
-                </span>
-              )}
-
-              <span>
-                Public token: <span>{publicToken}</span>
-              </span>
-            </p>
-            <p className="text-align-center">
-              Status: {beaconConnection ? "Connected" : "Disconnected"}
-            </p>
-          </div>
-        </div>
-        <div id="footer">
-          <img src="built-with-taquito.png" alt="Built with Taquito" />
-        </div>
-      </div>
-    );
-  } else if (userAddress && !isNaN(userBalance)) {
-    return (
-      <div className="main-box">
-        <h1>Taquito Boilerplate</h1>
-        <div id="tabs">
-          <div
-            id="transfer"
-            className={activeTab === "transfer" ? "active" : ""}
-            onClick={() => setActiveTab("transfer")}
-          >
-            Make a transfer
-          </div>
-          <div
-            id="contract"
-            className={activeTab === "contract" ? "active" : ""}
-            onClick={() => setActiveTab("contract")}
-          >
-            Interact with a contract
-          </div>
-        </div>
+        <h1>Commit Reveal</h1>
+  
         <div id="dialog">
           <div id="content">
-            {activeTab === "transfer" ? (
-              <div id="transfers">
-                <h3 className="text-align-center">Make a transfer</h3>
-                <Transfers
-                  Tezos={Tezos}
-                  setUserBalance={setUserBalance}
-                  userAddress={userAddress}
-                />
-              </div>
-            ) : (
+            
               <div id="increment-decrement">
                 <h3 className="text-align-center">
-                  Current counter: <span>{storage}</span>
+
+              <p>
+              <i className="far fa-file-code"></i>&nbsp;
+              <a
+                href={`https://better-call.dev/mainnet/${contractAddress}/operations`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {contractAddress}
+              </a>
+            </p>
+              
                 </h3>
                 <UpdateContract
                   contract={contract}
@@ -133,31 +71,9 @@ const App = () => {
                   setStorage={setStorage}
                 />
               </div>
-            )}
-            <p>
-              <i className="far fa-file-code"></i>&nbsp;
-              <a
-                href={`https://better-call.dev/ghostnet/${contractAddress}/operations`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {contractAddress}
-              </a>
-            </p>
-            <p>
-              <i className="far fa-address-card"></i>&nbsp;
-              <a
-                href={`https://ghostnet.tzkt.io/${userAddress}/operations/`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {userAddress}
-              </a>
-            </p>
-            <p>
-              <i className="fas fa-piggy-bank"></i>&nbsp;
-              {(userBalance / 1000000).toLocaleString("en-US")} ꜩ
-            </p>
+          
+
+   
           </div>
           <DisconnectButton
             wallet={wallet}
@@ -169,27 +85,20 @@ const App = () => {
             setBeaconConnection={setBeaconConnection}
           />
         </div>
-        <div id="footer">
-          <img src="built-with-taquito.png" alt="Built with Taquito" />
-        </div>
+ 
       </div>
     );
   } else if (!publicToken && !userAddress && !userBalance) {
     return (
       <div className="main-box">
         <div className="title">
-          <h1>Taquito React template</h1>
-          <a href="https://app.netlify.com/start/deploy?repository=https://github.com/ecadlabs/taquito-react-template">
-            <img
-              src="https://www.netlify.com/img/deploy/button.svg"
-              alt="netlify-button"
-            />
-          </a>
+          <h1>Commit Reveal</h1>
+         
         </div>
         <div id="dialog">
-          <header>Welcome to the Taquito React template!</header>
+       
           <div id="content">
-            <p>Hello!</p>
+           
             <p>
               This is a template Tezos dApp built using Taquito. It's a starting
               point for you to hack on and build your own dApp for Tezos.
@@ -204,7 +113,7 @@ const App = () => {
               </a>{" "}
               and click the <em>"Use this template"</em> button.
             </p>
-            <p>Go forth and Tezos!</p>
+          
           </div>
           <ConnectButton
             Tezos={Tezos}
@@ -220,7 +129,16 @@ const App = () => {
           />
         </div>
         <div id="footer">
-          <img src="built-with-taquito.png" alt="Built with Taquito" />
+        <p>
+              This is app is based on {" "}
+              <a
+                href="https://github.com/ecadlabs/taquito-react-template"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Taquito React Template
+              </a>{" "}
+            </p>
         </div>
       </div>
     );
