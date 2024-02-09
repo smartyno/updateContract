@@ -64,7 +64,7 @@ const App = () => {
               
                 </h3>
                 <UpdateContract
-                  contract = {contract}
+                  contract= {contract}
                   setUserBalance={setUserBalance}
                   Tezos={Tezos}
                   userAddress={userAddress}

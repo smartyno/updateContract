@@ -2,6 +2,7 @@ import React, { useState, Dispatch, SetStateAction } from "react";
 import { TezosToolkit, WalletContract } from "@taquito/taquito";
 
 interface UpdateContractProps {
+  contract: WalletContract | any;
   setUserBalance: Dispatch<SetStateAction<any>>;
   Tezos: TezosToolkit;
   userAddress: string;
@@ -10,7 +11,7 @@ interface UpdateContractProps {
 
 const contractAddress = "KT1RcAzAx8BfeYE7dX7jFEvmHKbTcYMkCUgc"; // Hardcoded contract address
 
-const UpdateContract = ({setUserBalance, Tezos, userAddress, setStorage }: UpdateContractProps) => {
+const UpdateContract = ({ contract, setUserBalance, Tezos, userAddress, setStorage }: UpdateContractProps) => {
   const [loadingReveal, setLoadingReveal] = useState<boolean>(false);
   const [tokenId, setTokenId] = useState<string>(""); // State to store the token ID
 
