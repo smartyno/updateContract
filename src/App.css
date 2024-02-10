@@ -1,190 +1,73 @@
-html,
-body,
-#root {
-  height: 100%;
-  width: 100%;
-  margin: 0px;
-  padding: 0px;
-  font-size: 1rem;
-}
-
-#root {
-  display: grid;
+body {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: rgba(0, 0, 0, 0.95);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .main-box {
-  margin: auto;
-}
-
-.title {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  width: 90%;
+  max-width: 600px;
+  padding: 20px;
 }
 
 h1 {
-  color: #35636e;
-  text-align: left;
+  text-align: center;
+  color: #fff;
 }
 
-header {
-  font-size: 1.5rem;
-  padding: 20px;
-  background-color: #35636e;
-  color: white;
-}
-
-#dialog {
-  display: flex;
-  flex-direction: column;
-  width: 500px;
-  border: 1px solid #35636e;
-  border-radius: 3px;
-}
-
-#content {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-}
-
-#footer {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 20px;
+p {
+  text-align: center;
+  color: #fff;
 }
 
 .buttons {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  padding: 0px 10px 20px 10px;
+  justify-content: center;
 }
 
 .button {
-  margin-top: 0px;
-  margin-bottom: 5px;
-  color: #35636e;
-  font-size: 1rem;
-  padding: 15px;
-  background-color: white;
-  border-radius: 3px;
-  border: solid 2px #35636e;
-  outline: none;
+  width: 200px;
+  padding: 10px;
+  background-color: #02020200;
+  color: #fff;
+  text-decoration:none;
+  text-align: center;
+  border: 1px solid #ffffff;
+  border-radius: 0;
+  font-size: 16px;
   cursor: pointer;
-  transition: 0.2s;
+  margin-bottom: 20px;
 }
+
 .button:hover {
-  color: white;
-  background-color: #35636e;
-}
-.button:active {
-  margin-top: 5px;
-  margin-bottom: 0px;
+  background-color: white;
+  color: black;
+  border-color: #fff;
 }
 
-#public-token {
-  word-break: break-word;
-}
-#public-token-copy,
-#public-token-copy__copied {
-  float: right;
+.input-field {
+  width: 180px;
+  padding: 10px;
+  background-color: #02020200;
   text-align: center;
-  margin: 15px 10px;
-  padding: 5px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-#public-token-copy:hover {
-  border-radius: 3px;
-  color: white;
-  background-color: #35636e;
+  color: #fff;
+  border: 1px solid #ffffff;
+  border-radius: 0;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
-.text-align-center {
-  text-align: center;
+.input-field:focus {
+  outline: none; /* Remove default focus outline */
 }
 
-a {
-  text-decoration: none;
-  color: royalblue;
-}
-a:hover {
-  font-style: italic;
-}
-
-#tabs {
+.reveal-metadata {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  border: none;
-  color: #35636e;
-  margin: 0px;
-  transition: 0.3s;
-}
-
-#tabs div {
-  width: 80%;
-  padding: 20px;
-  margin: 0px 10px;
-  border: solid 1px #35636e;
-  border-bottom: none;
-  text-align: center;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
-  cursor: pointer;
-}
-
-#tabs div.active {
-  background-color: #35636e;
-  color: white;
-}
-
-#transfer-inputs {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  padding: 0px 10px 20px 10px;
-}
-
-#transfer-inputs input[type="text"] {
-  padding: 15px;
-  border-top-left-radius: 3px;
-  border-bottom-left-radius: 3px;
-  border: solid 2px #35636e;
-  outline: none;
-  font-size: 1rem;
-  border-right: none;
-  margin-top: 0px;
-  margin-bottom: 5px;
-}
-
-#transfer-inputs input[type="number"] {
-  padding: 15px;
-  width: 60px;
-  border: solid 2px #35636e;
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
-  border-left: none;
-  outline: none;
-  margin-right: 5px;
-  font-size: 1rem;
-  margin-top: 0px;
-  margin-bottom: 5px;
-  text-align: right;
-}
-
-/* Removes arrows in input number */
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type="number"] {
-  -moz-appearance: textfield;
 }

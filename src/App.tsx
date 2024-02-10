@@ -1,150 +1,128 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TezosToolkit } from "@taquito/taquito";
+import { BeaconWallet } from "@taquito/beacon-wallet";
+import {
+  NetworkType,
+  BeaconEvent,
+  defaultEventCallbacks,
+} from "@airgap/beacon-dapp";
+
 import "./App.css";
+import qrcode from "qrcode-generator";
 import ConnectButton from "./components/ConnectWallet";
 import DisconnectButton from "./components/DisconnectWallet";
-import qrcode from "qrcode-generator";
 import UpdateContract from "./components/UpdateContract";
-import Transfers from "./components/Transfers";
-
-enum BeaconConnection {
-  NONE = "",
-  LISTENING = "Listening to P2P channel",
-  CONNECTED = "Channel connected",
-  PERMISSION_REQUEST_SENT = "Permission request sent, waiting for response",
-  PERMISSION_REQUEST_SUCCESS = "Wallet is connected",
-}
 
 const App = () => {
-  const [Tezos, setTezos] = useState<TezosToolkit>(
-    new TezosToolkit("https://maintnet.ecadinfra.com")
+  const [Tezos] = useState<TezosToolkit>(
+    new TezosToolkit("https://mainnet.ecadinfra.com")
   );
-  const [contract, setContract] = useState<any>(undefined);
-  const [publicToken, setPublicToken] = useState<string | null>(null);
-  const [wallet, setWallet] = useState<any>(null);
   const [userAddress, setUserAddress] = useState<string>("");
   const [userBalance, setUserBalance] = useState<number>(0);
   const [storage, setStorage] = useState<number>(0);
-  const [copiedPublicToken, setCopiedPublicToken] = useState<boolean>(false);
-  const [beaconConnection, setBeaconConnection] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<string>("transfer");
+  const [tokenId, setTokenId] = useState<string>("");
+  const [beacon, setBeacon] = useState<BeaconWallet | null>(null);
 
-  //Increment/Decrement contract
   const contractAddress: string = "KT1RcAzAx8BfeYE7dX7jFEvmHKbTcYMkCUgc";
 
   const generateQrCode = (): { __html: string } => {
     const qr = qrcode(0, "L");
-    qr.addData(publicToken || "");
     qr.make();
 
     return { __html: qr.createImgTag(4) };
   };
 
-  if  (userAddress && !isNaN(userBalance)) {
-    return (
-      <div className="main-box">
-        <h1>Commit Reveal</h1>
+  useEffect(() => {
+    // Initialize Beacon wallet instance
+    const initBeacon = async () => {
+      const wallet = new BeaconWallet({
+        name: "Commit-Reveal",
+        preferredNetwork: NetworkType.MAINNET,
+      });
+      await wallet.requestPermissions();
+      setBeacon(wallet);
+
+      // Connect to Tezos network using Beacon wallet as signer provider
+      Tezos.setWalletProvider(wallet);
+    };
+
+    initBeacon();
+
+    const cleanup = () => {
+      // Clean up Beacon wallet instance
+      if (beacon) {
+        beacon.clearActiveAccount();
   
-        <div id="dialog">
-          <div id="content">
-            
-              <div id="increment-decrement">
-                <h3 className="text-align-center">
+      }
+    };
 
-              <p>
-              <i className="far fa-file-code"></i>&nbsp;
-              <a
-                href={`https://better-call.dev/mainnet/${contractAddress}/operations`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {contractAddress}
-              </a>
-            </p>
-              
-                </h3>
-                <UpdateContract
-                  contract= {contract}
-                  setUserBalance={setUserBalance}
-                  Tezos={Tezos}
-                  userAddress={userAddress}
-                  setStorage={setStorage}
-                />
-              </div>
-          
+    window.addEventListener("beforeunload", cleanup);
 
-   
-          </div>
-          <DisconnectButton
-            wallet={wallet}
-            setPublicToken={setPublicToken}
-            setUserAddress={setUserAddress}
-            setUserBalance={setUserBalance}
-            setWallet={setWallet}
-            setTezos={setTezos}
-            setBeaconConnection={setBeaconConnection}
-          />
-        </div>
- 
-      </div>
-    );
-  } else if (!publicToken && !userAddress && !userBalance) {
-    return (
-      <div className="main-box">
-        <div className="title">
-          <h1>Commit Reveal</h1>
-         
-        </div>
-        <div id="dialog">
-       
-          <div id="content">
-           
+    return () => {
+      // Remove event listener when the component unmounts
+      window.removeEventListener("beforeunload", cleanup);
+      cleanup();
+    };
+  }, []);
+
+  
+
+  const revealCommit = async (): Promise<void> => {
+    try {
+      console.log("Sending reveal metadata transaction...");
+      const contract = await Tezos.wallet.at(contractAddress);
+      const op = await contract.methods.reveal_metadata(tokenId).send();
+      console.log("Transaction sent:", op);
+
+      console.log("Waiting for confirmation...");
+      await op.confirmation();
+      console.log("Transaction confirmed");
+
+      console.log("Fetching updated storage...");
+      const newStorage: any = await contract.storage();
+      console.log("Storage updated:", newStorage);
+
+      console.log("Fetching user balance...");
+      const balance = await Tezos.tz.getBalance(userAddress);
+      setUserBalance(parseFloat(balance.toFixed()));
+      console.log("User balance updated:", userBalance);
+    } catch (error) {
+      console.error("Error occurred:", error);
+    }
+  };
+
+  return (
+    <div className="main-box">
+      <h1>Commit Reveal</h1>
+      <p>This App is a simple implementation of a commit-reveal mechanism on the Tezos blockchain. When you provide the token ID (the app is already set to the correct contract) and click the "Commit Reveal" button, the app sends a transaction to the Tezos blockchain, cheking if you indeed hold this token, and if yes, updating the metadata associated with the token ID. <br /> <br />
+         In the context of the HEART-SHAPED, it will replace the initial image and the name of the token  -  with the one revealed. In simple words: the original image of the lake and its name will be displayed on the token as the primary (also on objkt.com).  <br /> <br />
+         Once you click 'commit reveal', the app will ask you to connect your wallet again to approve the operation. Please keep in mined, once you confirm the operation - it becomes irreversible. In simple words: no one will ever be able to replace the original image of the lake back with the abstract one.
+
+</p>
+      <div id="dialog">
+        <div id="content">
+          <div className="reveal-metadata">
             <p>
-              This is a template Tezos dApp built using Taquito. It's a starting
-              point for you to hack on and build your own dApp for Tezos.
-              <br />
-              If you have not done so already, go to the{" "}
-              <a
-                href="https://github.com/ecadlabs/taquito-react-template"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Taquito React template Github page
-              </a>{" "}
-              and click the <em>"Use this template"</em> button.
+              <input
+                type="text"
+                placeholder="Enter Token ID"
+                value={tokenId}
+                onChange={(e) => setTokenId(e.target.value)}
+                className="input-field"
+              />
             </p>
-          
+            <button className="button" onClick={revealCommit}>
+              Commit Reveal
+            </button>
           </div>
-          <ConnectButton
-            Tezos={Tezos}
-            setContract={setContract}
-            setPublicToken={setPublicToken}
-            setWallet={setWallet}
-            setUserAddress={setUserAddress}
-            setUserBalance={setUserBalance}
-            setStorage={setStorage}
-            contractAddress={contractAddress}
-            setBeaconConnection={setBeaconConnection}
-            wallet={wallet}
-          />
-        </div>
-        <div id="footer">
-        <p>
-              This is app is based on {" "}
-              <a
-                href="https://github.com/ecadlabs/taquito-react-template"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Taquito React Template
-              </a>{" "}
-            </p>
         </div>
       </div>
-    );
-  } else {
-    return <div>An error has occurred</div>;
-  }
+      <footer>
+        <p>This app is based on <a href="https://github.com/ecadlabs/taquito-react-template">Taquito React Template</a></p>
+      </footer>
+    </div>
+    
+  );
 };
 
 export default App;

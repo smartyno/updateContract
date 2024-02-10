@@ -2,16 +2,20 @@ import React, { useState, Dispatch, SetStateAction } from "react";
 import { TezosToolkit, WalletContract } from "@taquito/taquito";
 
 interface UpdateContractProps {
-  contract: WalletContract | any;
+  contract: WalletContract | undefined;
   setUserBalance: Dispatch<SetStateAction<any>>;
   Tezos: TezosToolkit;
   userAddress: string;
   setStorage: Dispatch<SetStateAction<number>>;
 }
 
-const contractAddress = "KT1RcAzAx8BfeYE7dX7jFEvmHKbTcYMkCUgc"; // Hardcoded contract address
-
-const UpdateContract = ({ contract, setUserBalance, Tezos, userAddress, setStorage }: UpdateContractProps) => {
+const UpdateContract = ({
+  contract,
+  setUserBalance,
+  Tezos,
+  userAddress,
+  setStorage
+}: UpdateContractProps) => {
   const [loadingReveal, setLoadingReveal] = useState<boolean>(false);
   const [tokenId, setTokenId] = useState<string>(""); // State to store the token ID
 
@@ -24,14 +28,16 @@ const UpdateContract = ({ contract, setUserBalance, Tezos, userAddress, setStora
 
     setLoadingReveal(true);
     try {
-      const contract = await Tezos.wallet.at(contractAddress);
-      const op = await contract.methods.reveal_metadata(tokenId).send();
-      await op.confirmation();
+      if (contract) {
+        const op = await contract.methods.reveal_metadata(tokenId).send();
+        await op.confirmation();
 
-      const newStorage: any = await contract.storage();
-      if (newStorage) setStorage(newStorage.toNumber());
+        const newStorage: any = await contract.storage();
+        if (newStorage) setStorage(newStorage.toNumber());
 
-      setUserBalance(await Tezos.tz.getBalance(userAddress));
+        const balance = await Tezos.tz.getBalance(userAddress);
+        setUserBalance(parseFloat(balance.toFixed()));
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -42,13 +48,19 @@ const UpdateContract = ({ contract, setUserBalance, Tezos, userAddress, setStora
   return (
     <div className="reveal-metadata">
       <p>
-      <input
-        type="text"
-        placeholder="Enter Token ID"
-        value={tokenId}
-        onChange={(e) => setTokenId(e.target.value)}
-      /> </p>
-      <button className="button" disabled={loadingReveal} onClick={revealMetadata}>
+        <input
+          type="text"
+          placeholder="Enter Token ID"
+          value={tokenId}
+          onChange={(e) => setTokenId(e.target.value)}
+          className="input-field"
+        />
+      </p>
+      <button
+        className="button"
+        disabled={loadingReveal || !contract}
+        onClick={revealMetadata}
+      >
         {loadingReveal ? (
           <span>
             <i className="fas fa-spinner fa-spin"></i>&nbsp; Please wait
